@@ -1,12 +1,14 @@
-(ns swot-clj.core)
+(ns swot-clj.core
+  (require [clojure.java.io :refer [resource]]
+           [clojure.string :refer (split-lines lower-case)]))
 
 (defn- read-file
   "Reads each line in a file and returns a vector containing each line."
   [file]
-  (clojure.string/split-lines (slurp file)))
+  (split-lines (slurp file)))
 
-(def ^:private blacklist (read-file (clojure.java.io/resource "blacklist.txt")))
-(def ^:private whitelist (read-file (clojure.java.io/resource "whitelist.txt")))
+(def ^:private blacklist (read-file (resource "blacklist.txt")))
+(def ^:private whitelist (read-file (resource "whitelist.txt")))
 
 (defn- in?
   "Determines if an element is in a given sequence."
@@ -16,7 +18,7 @@
 (defn- get-domain
   "Strips a string, such as a URL or e-mail address, down to its domain."
   [text]
-  (clojure.string/lower-case (re-find #"[^@\/:]+[:\d]*$" text)))
+  (lower-case (re-find #"[^@\/:]+[:\d]*$" text)))
 
 (defn- get-domain-hierarchy
   "Returns the domain hierarchy delimited by slashes (akin to a file path) for a given domain."
@@ -24,29 +26,24 @@
   (apply str (interpose "/" (reverse (.split domain "\\.")))))
 
 (defn- get-domain-file
-  "Returns the file representing a given domain."
+  "Returns the resource path representing a given domain."
   [domain]
-  (clojure.java.io/resource
-   (str
-    "domains/"
-    (get-domain-hierarchy domain)
-    ".txt")))
+  (resource (str "domains/" (get-domain-hierarchy domain) ".txt")))
 
 (defn is-academic?
   "Determines if the passed string is an email or domain belonging to an academic institution."
   [text]
-  (let [domain (clojure.string/lower-case (get-domain text))]
+  (let [domain (lower-case (get-domain text))]
     (if (nil? (in? blacklist domain))
       (if (nil? (in? whitelist domain))
         (not (nil? (get-domain-file domain)))
-      false)
+        false)
       false)))
 
 (defn get-institution-name
   "Determines the name of an institution based on the passed email or domain."
   [text]
-  (let [domain (clojure.string/lower-case (get-domain text))]
+  (let [domain (lower-case (get-domain text))]
     (if (is-academic? domain)
-      (read-file
-       (get-domain-file domain))
+      (read-file (get-domain-file domain))
       nil)))
