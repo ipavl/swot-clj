@@ -26,13 +26,11 @@
 (defn- get-domain-file
   "Returns the file representing a given domain."
   [domain]
-  (clojure.java.io/as-file
-   (.getPath
-    (clojure.java.io/resource
-     (str
-      "domains/"
-      (get-domain-hierarchy domain)
-      ".txt")))))
+  (clojure.java.io/resource
+   (str
+    "domains/"
+    (get-domain-hierarchy domain)
+    ".txt")))
 
 (defn is-academic?
   "Determines if the passed string is an email or domain belonging to an academic institution."
@@ -40,7 +38,8 @@
   (let [domain (clojure.string/lower-case (get-domain text))]
     (if (nil? (in? blacklist domain))
       (if (nil? (in? whitelist domain))
-        (.exists (get-domain-file domain)))
+        (not (nil? (get-domain-file domain)))
+      false)
       false)))
 
 (defn get-institution-name
