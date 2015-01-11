@@ -23,20 +23,24 @@
   [domain]
   (apply str (interpose "/" (reverse (.split domain "\\.")))))
 
+(defn get-domain-file
+  "Returns the file representing a given domain."
+  [domain]
+  (clojure.java.io/as-file
+   (.getPath
+    (clojure.java.io/resource
+     (str
+      "domains/"
+      (get-domain-hierarchy domain)
+      ".txt")))))
+
 (defn is-academic?
   "Determines if the passed string is an email or domain belonging to an academic institution."
   [text]
   (let [domain (clojure.string/lower-case (get-domain text))]
     (if (nil? (in? blacklist domain))
       (if (nil? (in? whitelist domain))
-        (.exists
-          (clojure.java.io/as-file
-            (.getPath
-              (clojure.java.io/resource
-                (str
-                  "domains/"
-                  (get-domain-hierarchy domain)
-                  ".txt"))))))
+        (.exists (get-domain-file domain)))
       false)))
 
 (defn get-institution-name
@@ -45,10 +49,5 @@
   (let [domain (clojure.string/lower-case (get-domain text))]
     (if (is-academic? domain)
       (read-file
-       (.getPath
-        (clojure.java.io/resource
-          (str
-            "domains/"
-            (get-domain-hierarchy text)
-            ".txt"))))
+       (get-domain-file domain))
       ["This domain does not belong to a valid institution, is blacklisted, or is not yet in the database."])))
