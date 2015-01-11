@@ -43,7 +43,7 @@
     (do
       (is (= (get-institution-name "uoguelph.ca")
              ["University of Guelph"]))
-      (is (= (get-institution-name "uwaterloo.ca")
+      (is (= (get-institution-name "test@uwaterloo.ca")
              ["University of St. Jerome's College" "University of Waterloo"]))
       (is (= (get-institution-name "kyoto-u.ac.jp")
              ["Kyoto University"]))

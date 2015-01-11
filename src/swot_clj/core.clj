@@ -7,8 +7,13 @@
   [file]
   (split-lines (slurp file)))
 
-(def ^:private blacklist (read-file (resource "blacklist.txt")))
-(def ^:private whitelist (read-file (resource "whitelist.txt")))
+(def ^:private blacklist
+  "Returns a vector of blacklisted domains, such as those that snuck into the .edu registry."
+  (read-file (resource "blacklist.txt")))
+
+(def ^:private whitelist
+  "Returns a vector of whitelisted TLDs, which are known to belong only to academic institutions."
+  (read-file (resource "whitelist.txt")))
 
 (defn- in?
   "Determines if an element is in a given sequence."
@@ -26,7 +31,7 @@
   (apply str (interpose "/" (reverse (.split domain "\\.")))))
 
 (defn- get-domain-file
-  "Returns the resource path representing a given domain."
+  "Returns the resource path representing a given domain, or nil if not found."
   [domain]
   (resource (str "domains/" (get-domain-hierarchy domain) ".txt")))
 
@@ -41,7 +46,8 @@
       false)))
 
 (defn get-institution-name
-  "Determines the name of an institution based on the passed email or domain."
+  "Returns the name of an institution based on the passed email or domain, or nil if the domain
+  was not recognized (i.e. `is-academic?` returns false)."
   [text]
   (let [domain (lower-case (get-domain text))]
     (if (is-academic? domain)
