@@ -41,9 +41,9 @@
   (testing "valid domain with multiple levels of hierarchy"
     (is (= (get-institution-name "kyoto-u.ac.jp")
            ["Kyoto University"])))
-  (testing "valid domain with accented characters in institution name"
+  (testing "valid domain with accented characters in the institution name"
     (is (= (get-institution-name "jyu.fi")
            ["University of Jyväskylä"])))
-  (testing "valid domain with non-English characters"
+  (testing "valid domain with non-English characters in the institution name"
     (is (= (get-institution-name "fadi.at")
            ["BRG Fadingerstraße Linz, Austria"]))))
