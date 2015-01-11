@@ -5,20 +5,20 @@
   [file]
   (clojure.string/split-lines (slurp file)))
 
-(def blacklist (read-file (clojure.java.io/resource "blacklist.txt")))
-(def whitelist (read-file (clojure.java.io/resource "whitelist.txt")))
+(def ^:private blacklist (read-file (clojure.java.io/resource "blacklist.txt")))
+(def ^:private whitelist (read-file (clojure.java.io/resource "whitelist.txt")))
 
 (defn- in?
   "Determines if an element is in a given sequence."
   [seq elm]
   (some #(= elm %) seq))
 
-(defn get-domain
+(defn- get-domain
   "Strips a string, such as a URL or e-mail address, down to its domain."
   [text]
   (clojure.string/lower-case (re-find #"[^@\/:]+[:\d]*$" text)))
 
-(defn get-domain-hierarchy
+(defn- get-domain-hierarchy
   "Returns the domain hierarchy delimited by slashes (akin to a file path) for a given domain."
   [domain]
   (apply str (interpose "/" (reverse (.split domain "\\.")))))
@@ -49,4 +49,4 @@
     (if (is-academic? domain)
       (read-file
        (get-domain-file domain))
-      ["This domain does not belong to a valid institution, is blacklisted, or is not yet in the database."])))
+      nil)))

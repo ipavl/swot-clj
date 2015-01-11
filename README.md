@@ -28,34 +28,33 @@ work fine from the REPL as well.
       (println (is-academic? "australia.edu"))  ;; blacklisted domain
       ;; => false
       (println (get-institution-name "australia.edu"))
-      ;; => [This domain does not belong to a valid institution, is blacklisted, or is not yet in the database.]
+      ;; => [Unknown, invalid, or blacklisted domain.]
       (println (is-academic? "github.com"))
       ;; => false
       (println (get-institution-name "github.com")))
-      ;; => [This domain does not belong to a valid institution, is blacklisted, or is not yet in the database.]
+      ;; => [Unknown, invalid, or blacklisted domain.]
 
 ## Documentation
 
-### `is-academic?`
+### swot-clj.core
+
+#### `is-academic?`
 
 Takes one string argument (a domain or email address) and returns:
 
 * `true` if the domain is a valid academic institution
-* `false` if the domain is blacklisted*
+* `false` otherwise
 
-*Notes:* Currently, a null-pointer will be thrown if the institution is not known or blacklisted (e.g. google.com), but will return
-`false` in a future release. There is a whitelist of known academic TLDs to allow for some leeway in the database being out of date,
-however the program only detects the TLD as being valid, and not domains under that TLD so those domains will also be treated as invalid.
+*Notes:* There is a whitelist of known academic TLDs to allow for some leeway in the database being out of date,
+however the program only detects the TLD as being valid, and not domains under that TLD so those domains will
+also be treated as invalid for the time being.
 
-### `get-institution-name`
+#### `get-institution-name`
 
 Takes one string argument (a domain or email address) and returns a vector containing:
 
 * the institution's name(s) for valid domains
 * the string `This domain does not belong to a valid institution, is blacklisted, or is not yet in the database.` for blacklisted domains*
-
-*Notes:* Currently, a null-pointer will be thrown if the institution is not known or blacklisted (e.g. google.com), but will return
-the same message as blacklisted domains in a future release for unrecognized domains.
 
 ## License
 
