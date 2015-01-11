@@ -17,14 +17,22 @@ academic institution) and `get-institution-name` (to associate a domain with an 
 single argument, which is the domain name or an email address. Below is sample usage for a program, however both functions
 work fine from the REPL as well.
 
-    (ns yourproject
-      (:use swot-slj.core))
+    (ns your.project
+      (:require [swot-clj.core :refer :all]))
 
-    (is-academic? "mit.edu")
-    ;; => true
-
-    (get-institution-name "mit.edu")
-    ;; => ["Massachusetts Institute of Technology"]
+    (defn -main [& args]
+      (println (is-academic? "example@mit.edu"))
+      ;; => true
+      (println (get-institution-name "mit.edu"))
+      ;; => [Massachusetts Institute of Technology]
+      (println (is-academic? "australia.edu"))  ;; blacklisted domain
+      ;; => false
+      (println (get-institution-name "australia.edu"))
+      ;; => [This domain does not belong to a valid institution, is blacklisted, or is not yet in the database.]
+      (println (is-academic? "github.com"))
+      ;; => false
+      (println (get-institution-name "github.com")))
+      ;; => [This domain does not belong to a valid institution, is blacklisted, or is not yet in the database.]
 
 ## Documentation
 
