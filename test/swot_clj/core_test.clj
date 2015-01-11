@@ -38,10 +38,10 @@
   (testing "valid domain with multiple institution names"
     (is (= (get-institution-name "uwaterloo.ca")
            ["University of St. Jerome's College" "University of Waterloo"])))
-  (testing "valid domain with hyphens"
+  (testing "valid domain with multiple levels of hierarchy"
     (is (= (get-institution-name "kyoto-u.ac.jp")
            ["Kyoto University"])))
-  (testing "valid domain with accented characters"
+  (testing "valid domain with accented characters in institution name"
     (is (= (get-institution-name "jyu.fi")
            ["University of Jyväskylä"])))
   (testing "valid domain with non-English characters"
