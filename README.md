@@ -1,4 +1,5 @@
 # swot-clj
+[![Build Status](https://travis-ci.org/ipavl/swot-clj.svg?branch=master)](https://travis-ci.org/ipavl/swot-clj)
 
 A Clojure port of [Lee Reilly](https://github.com/leereilly)'s [Swot library](https://github.com/leereilly/swot)
 to validate email addresses and domains of academic institutions.
