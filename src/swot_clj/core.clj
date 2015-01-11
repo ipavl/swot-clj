@@ -5,8 +5,8 @@
   [file]
   (clojure.string/split-lines (slurp file)))
 
-(def blacklist (read-file (.getPath (clojure.java.io/resource "blacklist.txt"))))
-(def whitelist (read-file (.getPath (clojure.java.io/resource "whitelist.txt"))))
+(def blacklist (read-file (clojure.java.io/resource "blacklist.txt")))
+(def whitelist (read-file (clojure.java.io/resource "whitelist.txt")))
 
 (defn- in?
   "Determines if an element is in a given sequence."
