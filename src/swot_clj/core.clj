@@ -1,12 +1,12 @@
 (ns swot-clj.core)
 
-(defn- read-list
+(defn- read-file
   "Reads each line in a file and returns a vector containing each line."
   [file]
   (clojure.string/split-lines (slurp file)))
 
-(def blacklist (read-list (.getPath (clojure.java.io/resource "blacklist.txt"))))
-(def whitelist (read-list (.getPath (clojure.java.io/resource "whitelist.txt"))))
+(def blacklist (read-file (.getPath (clojure.java.io/resource "blacklist.txt"))))
+(def whitelist (read-file (.getPath (clojure.java.io/resource "whitelist.txt"))))
 
 (defn- in?
   "Determines if an element is in a given sequence."
@@ -38,3 +38,17 @@
                   (get-domain-hierarchy domain)
                   ".txt"))))))
       false)))
+
+(defn get-institution-name
+  "Determines the name of an institution based on the passed email or domain."
+  [text]
+  (let [domain (clojure.string/lower-case (get-domain text))]
+    (if (is-academic? domain)
+      (read-file
+       (.getPath
+        (clojure.java.io/resource
+          (str
+            "domains/"
+            (get-domain-hierarchy text)
+            ".txt"))))
+      ["This domain does not belong to a valid institution, is blacklisted, or is not yet in the database."])))
