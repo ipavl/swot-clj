@@ -18,15 +18,23 @@
   [text]
   (clojure.string/lower-case (re-find #"[^@\/:]+[:\d]*$" text)))
 
+(defn get-domain-hierarchy
+  "Returns the domain hierarchy delimited by slashes (akin to a file path) for a given domain."
+  [domain]
+  (apply str (interpose "/" (reverse (.split domain "\\.")))))
+
 (defn is-academic?
   "Determines if the passed string is an email or domain belonging to an academic institution."
   [text]
-  (if (nil?
-        (in?
-          blacklist
-          (clojure.string/lower-case (get-domain text))))
-    (if nil?
-      (in?
-        whitelist
-        (clojure.string/lower-case (get-domain text))))
-    false))
+  (let [domain (clojure.string/lower-case (get-domain text))]
+    (if (nil? (in? blacklist domain))
+      (if (nil? (in? whitelist domain))
+        (.exists
+          (clojure.java.io/as-file
+            (.getPath
+              (clojure.java.io/resource
+                (str
+                  "domains/"
+                  (get-domain-hierarchy domain)
+                  ".txt"))))))
+      false)))
