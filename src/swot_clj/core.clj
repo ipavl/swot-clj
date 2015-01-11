@@ -23,7 +23,7 @@
   [domain]
   (apply str (interpose "/" (reverse (.split domain "\\.")))))
 
-(defn get-domain-file
+(defn- get-domain-file
   "Returns the file representing a given domain."
   [domain]
   (clojure.java.io/as-file
