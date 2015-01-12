@@ -71,15 +71,11 @@ To add/edit/remove a school, follow the [same guidelines](https://github.com/lee
 
 Like Swot, swot-clj only gives you a high confidence level - *not a guarantee* - that an email address belongs to an individual that is a current student. You should (occasionally) monitor sign ups to verify registrations, particularly if you see a lot of traffic from certain domains.
 
-Other limitations and known issues, some of which are shared with Swot, include:
+swot-clj shares the same limitations as Swot:
 
-* only top-level institution domains are checked, so a `mail.school.edu` or `cs.school.edu` email address will not pass checks, nor will `www.school.edu` (but `school.edu` and `@school.edu` will)
-* known institutions must be in the local database to be detected
-  * there is a `whitelist.txt` file of known academic TLDs for heuristics, however it is not implemented yet
-  * you should handle this prior to passing a string to this library's functions for the time being
-* there may be false positives or missing institutions - feel free to [contribute](#contributing)!
-* there is no way to tell if an email address belongs to a student, faculty, contractor, club, or alumni
-  * emails could be checked for the string `alumni` to cover alumni, however this won't apply to all institutions
+* You can search by email and domain names only. You cannot search by IP.
+* You don't know if the email address belongs to a student, faculty, staff member, alumni, or a contractor.
+* There may be a few false positives, missing institutions... maybe even a couple of typos. Contributions welcome!
 
 ## License
 

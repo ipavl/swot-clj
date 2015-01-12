@@ -13,12 +13,15 @@
   (testing "valid emails and domains"
     (do
       (is (= (is-academic? "mail@stanford.edu") true))
-      (is (= (is-academic? "TeST@ox.AC.Uk") true))
+      (is (= (is-academic? "TeST@cs.ox.AC.Uk") true))
       (is (= (is-academic? "stanford.edu") true))
-      (is (= (is-academic? "snu.ac.kr") true))
+      (is (= (is-academic? "www.stanford.edu") true))
+      (is (= (is-academic? "http://snu.ac.kr") true))
       (is (= (is-academic? "sabi.eu.com") true))
       (is (= (is-academic? "   mit.edu   ") true))
       (is (= (is-academic? "univ-douala.com") true))
+      (is (= (is-academic? "heuristics-u.ac.jp") true))
+      (is (= (is-academic? "test@mail.uoguelph.ca") true))
       (is (= (is-academic? "usenghor-francophonie.org") true))
       (is (= (is-academic? "marcusoldham.vic.edu.au") true))))
 
@@ -39,13 +42,10 @@
   (testing "invalid emails, domains, and values"
     (do
       (is (= (get-institution-name "no-reply@google.com") nil))
-      (is (= (get-institution-name "google.edu") nil))
       (is (= (get-institution-name nil) nil))))
 
   (testing "valid domains"
     (do
-      (is (= (get-institution-name "uoguelph.ca")
-             ["University of Guelph"]))
       (is (= (get-institution-name "test@uwaterloo.ca")
              ["University of St. Jerome's College" "University of Waterloo"]))
       (is (= (get-institution-name "kyoto-u.ac.jp")

@@ -1,6 +1,7 @@
 (ns swot-clj.core
-  (require [clojure.java.io :refer [resource]]
-           [clojure.string :refer (split-lines lower-case trim)]))
+  (require [clojure.java.io :refer [reader resource]]
+           [clojure.string :refer [split-lines lower-case trim]]
+           [inet.data.format.psl :as psl]))
 
 (defn- read-file
   "Reads each line in a file and returns a vector containing each line."
@@ -9,11 +10,12 @@
 
 (def ^:private blacklist
   "Returns a vector of blacklisted domains, such as those that snuck into the .edu registry."
-  (read-file (resource "blacklist.txt")))
+  (read-file (reader (resource "blacklist.txt"))))
 
 (def ^:private whitelist
-  "Returns a vector of whitelisted TLDs, which are known to belong only to academic institutions."
-  (read-file (resource "whitelist.txt")))
+  "A list of TLDs which are known to belong only to academic institutions. The file should be
+  in the Mozilla Public Suffix List (PSL) format, and can be queried with (psl/lookup whitelist domain)."
+  (psl/load (reader (resource "whitelist.txt"))))
 
 (defn- in?
   "Determines if an element is in a given sequence."
@@ -40,10 +42,10 @@
   [text]
   (if (not (nil? text))
     (let [domain (get-domain text)]
-      (if (nil? (in? blacklist domain))
-        (if (nil? (in? whitelist domain))
-          (not (nil? (get-domain-file domain)))
-          false)
+      (if (nil? (in? blacklist (str (psl/lookup domain))))
+        (if (nil? (psl/lookup whitelist domain))
+          (not (nil? (get-domain-file (str (psl/lookup domain)))))
+          true)
         false))
     false))
 
