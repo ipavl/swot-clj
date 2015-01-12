@@ -27,29 +27,27 @@ Both functions take a single string argument, representing a domain name or an e
 
 ### Verify email addresses
 
-    (is-academic? "test@stanford.edu") ;; true
-    (is-academic? "test@strath.ac.uk") ;; true
-    (is-academic? "test@uottawa.ca")   ;; true
-    (is-academic? "test@ugr.es")       ;; true
-    (is-academic? "test@gmail.com")    ;; false
+    (is-academic? "test@stanford.edu")          ;; true
+    (is-academic? "test@strath.ac.uk")          ;; true
+    (is-academic? "test@soft-eng.strath.ac.uk") ;; true
+    (is-academic? "test@ugr.es")                ;; true
+    (is-academic? "test@uottawa.ca")            ;; true
+    (is-academic? "test@gmail.com")             ;; false
 
 ### Verify domains
 
-    (is-academic? "mit.edu")              ;; true
-    (is-academic? "uoguelph.ca")          ;; true
-    (is-academic? "https://uwaterloo.ca") ;; true
-    (is-academic? "http://google.com")    ;; false
+    (is-academic? "harvard.edu")             ;; true
+    (is-academic? "www.harvard.edu")         ;; true
+    (is-academic? "http://www.harvard.edu")  ;; true
+    (is-academic? "http://www.github.com")   ;; false
+    (is-academic? "http://www.google.co.uk") ;; false
 
 ### Find school names
 
-    (get-institution-name "umanitoba.ca")
-    ;; => ["University of Manitoba"]
-    (get-institution-name "test@uvic.ca")
-    ;; => ["University of Victoria"]
-    (get-institution-name "dal.ca")
-    ;; => ["Dalhousie University"]
-    (get-institution-name "notaschool.edu")
-    ;; => nil
+    (get-institution-name "test@cs.strath.ac.uk")
+    ;; => ["University of Strathclyde"]
+    (get-institution-name "http://www.stanford.edu")
+    ;; => ["Stanford University"]
 
 Please see the [Limitations](#limitations) section for known issues and limitations.
 
