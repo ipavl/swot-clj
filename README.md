@@ -76,8 +76,6 @@ Other limitations and known issues, some of which are shared with Swot, include:
 * only top-level institution domains are checked, so a `mail.school.edu` or `cs.school.edu` email address will not pass checks, nor will `www.school.edu` (but `school.edu` and `@school.edu` will)
 * known institutions must be in the local database to be detected
   * there is a `whitelist.txt` file of known academic TLDs for heuristics, however it is not implemented yet
-* strings are not trimmed or tested for validity, so "`stanford.edu  `" (with trailing spaces) will return `false` even though `stanford.edu` is a valid academic domain, and passing `nil` won't work either
-  * strings are coverted to lowercase to work with the local database, but that's about it
   * you should handle this prior to passing a string to this library's functions for the time being
 * there may be false positives or missing institutions - feel free to [contribute](#contributing)!
 * there is no way to tell if an email address belongs to a student, faculty, contractor, club, or alumni

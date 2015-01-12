@@ -38,18 +38,21 @@
 (defn is-academic?
   "Determines if the passed string is an email or domain belonging to an academic institution."
   [text]
-  (let [domain (get-domain text)]
-    (if (nil? (in? blacklist domain))
-      (if (nil? (in? whitelist domain))
-        (not (nil? (get-domain-file domain)))
-        false)
-      false)))
+  (if (not (nil? text))
+    (let [domain (get-domain text)]
+      (if (nil? (in? blacklist domain))
+        (if (nil? (in? whitelist domain))
+          (not (nil? (get-domain-file domain)))
+          false)
+        false))
+    false))
 
 (defn get-institution-name
   "Returns a vector of an institution's name(s) based on the passed email or domain, or nil if
   the domain was not recognized (i.e. is-academic? returns false)."
   [text]
-  (let [domain (get-domain text)]
-    (if (is-academic? domain)
-      (read-file (get-domain-file domain))
-      nil)))
+  (if (not (nil? text))
+    (let [domain (get-domain text)]
+      (if (is-academic? domain)
+        (read-file (get-domain-file domain))
+        nil))))

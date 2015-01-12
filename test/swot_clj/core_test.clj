@@ -22,12 +22,13 @@
       (is (= (is-academic? "usenghor-francophonie.org") true))
       (is (= (is-academic? "marcusoldham.vic.edu.au") true))))
 
-  (testing "invalid emails and domains"
+  (testing "invalid emails, domains, and values"
     (do
       (is (= (is-academic? "harvard.edu.com") false))
       (is (= (is-academic? "no-reply@gmail.com") false))
       (is (= (is-academic? ".com") false))
-      (is (= (is-academic? ".invalid") false)))))
+      (is (= (is-academic? ".invalid") false))
+      (is (= (is-academic? nil) false)))))
 
 (deftest test-institution-names
   (testing "blacklisted domains"
@@ -35,10 +36,11 @@
       (is (= (get-institution-name "si.edu") nil))
       (is (= (get-institution-name "aMERICA.edU") nil))))
 
-  (testing "invalid domains"
+  (testing "invalid emails, domains, and values"
     (do
-      (is (= (get-institution-name "google.com") nil))
-      (is (= (get-institution-name "google.edu") nil))))
+      (is (= (get-institution-name "no-reply@google.com") nil))
+      (is (= (get-institution-name "google.edu") nil))
+      (is (= (get-institution-name nil) nil))))
 
   (testing "valid domains"
     (do
