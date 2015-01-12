@@ -47,7 +47,11 @@
       (is (= true (is-academic? "lee@strath.ac.uk ")))
       (is (= false (is-academic? " gmail.com ")))
 
-      (is (= true (is-academic? "lee@stud.uni-corvinus.hu")))))
+      (is (= true (is-academic? "lee@stud.uni-corvinus.hu")))
+
+      ;; overkill
+      (is (= true (is-academic? "lee@harvard.edu")))
+      (is (= true (is-academic? "lee@mail.harvard.edu")))))
 
   (testing "fail blacklisted domains"
     (do
@@ -57,17 +61,13 @@
       (is (= false (is-academic? "foo.si.edu")))
       (is (= false (is-academic? "america.edu")))))
 
-  (testing "don't error on TLD-only domains"
+  (testing "fail but don't error on TLD-only domains"
     (do
       (is (= false (is-academic? ".com")))))
 
-  (testing "don't error on invalid domains"
+  (testing "fail but don't error on invalid domains"
     (do
-      (is (= false (is-academic? "foo@bar.invalid")))))
-
-      ;; overkill
-      (is (= true (is-academic? "lee@harvard.edu")))
-      (is (= true (is-academic? "lee@mail.harvard.edu"))))
+      (is (= false (is-academic? "foo@bar.invalid"))))))
 
 (deftest test-institution-name
   (testing "return name of valid institutions"
