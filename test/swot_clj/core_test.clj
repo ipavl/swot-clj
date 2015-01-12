@@ -17,6 +17,7 @@
       (is (= (is-academic? "stanford.edu") true))
       (is (= (is-academic? "snu.ac.kr") true))
       (is (= (is-academic? "sabi.eu.com") true))
+      (is (= (is-academic? "   mit.edu   ") true))
       (is (= (is-academic? "univ-douala.com") true))
       (is (= (is-academic? "usenghor-francophonie.org") true))
       (is (= (is-academic? "marcusoldham.vic.edu.au") true))))
