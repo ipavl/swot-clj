@@ -1,3 +1,8 @@
+// These top-level domains are guaranteed to be academic institutions.
+// There are a few domains which are exceptions, namely for the .edu TLD, which
+// should be blocked in blacklist.txt.
+//
+// Upstream: https://github.com/leereilly/swot/blob/master/lib/swot/academic_tlds.rb
 ac.ae
 ac.at
 ac.bd

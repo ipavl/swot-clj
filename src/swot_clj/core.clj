@@ -9,13 +9,24 @@
   (split-lines (slurp file)))
 
 (def ^:private blacklist
-  "Returns a vector of blacklisted domains, such as those that snuck into the .edu registry."
+  "Returns a vector of blacklisted domains, such as those that snuck into the
+  .edu registry."
   (read-file (reader (resource "blacklist.txt"))))
 
 (def ^:private whitelist
-  "A list of TLDs which are known to belong only to academic institutions. The file should be
-  in the Mozilla Public Suffix List (PSL) format, and can be queried with (psl/lookup whitelist domain)."
-  (psl/load (reader (resource "whitelist.txt"))))
+  "A list of TLDs which are known to belong only to academic institutions.
+
+  The file should be in the Mozilla Public Suffix List (PSL) format, and can be
+  queried with (psl/lookup whitelist domain)."
+  (psl/load (reader (resource "academic_tlds.dat"))))
+
+(def ^:private tld-list
+  "A list of valid TLDs used to determine the base domain of a string
+  (e.g. get ox.ac.uk from mail@cs.ox.ac.uk).
+
+  The file should be in the Mozilla Public Suffix List (PSL) format. It is
+  saved locally to speed up the first lookup and to save bandwidth."
+  (psl/load (reader (resource "effective_tld_names.dat"))))
 
 (defn- in?
   "Determines if an element is in a given sequence."
@@ -28,7 +39,8 @@
   (trim (lower-case (re-find #"[^@\/:]+[:\d]*$" text))))
 
 (defn- get-domain-hierarchy
-  "Returns the domain hierarchy delimited by slashes (akin to a file path) for a given domain."
+  "Returns the domain hierarchy delimited by slashes (akin to a file path) for
+  a given domain."
   [domain]
   (apply str (interpose "/" (reverse (.split domain "\\.")))))
 
@@ -38,20 +50,22 @@
   (resource (str "domains/" (get-domain-hierarchy domain) ".txt")))
 
 (defn is-academic?
-  "Determines if the passed string is an email or domain belonging to an academic institution."
+  "Determines if the passed string is an email or domain belonging to an
+  academic institution."
   [text]
   (if (not (nil? text))
     (let [domain (get-domain text)]
-      (if (nil? (in? blacklist (str (psl/lookup domain))))
+      (if (nil? (in? blacklist (str (psl/lookup tld-list domain))))
         (if (nil? (psl/lookup whitelist domain))
-          (not (nil? (get-domain-file (str (psl/lookup domain)))))
+          (not (nil? (get-domain-file (str (psl/lookup tld-list domain)))))
           true)
         false))
     false))
 
 (defn get-institution-name
-  "Returns a vector of an institution's name(s) based on the passed email or domain, or nil if
-  the domain was not recognized (i.e. is-academic? returns false)."
+  "Returns a vector of an institution's name(s) based on the passed email or
+  domain, or nil if the domain was not recognized (i.e. is-academic? returns
+  false)."
   [text]
   (if (not (nil? text))
     (let [domain (get-domain text)]
