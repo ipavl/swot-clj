@@ -5,5 +5,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]]
   :repl-options {:init-ns swot-clj.core}
+  :plugins [[codox "0.8.10"]]
+  :codox {:src-dir-uri "https://github.com/ipavl/swot-clj/blob/master/"
+          :src-linenum-anchor-prefix "L"}
   :scm {:name "git"
         :url "https://github.com/ipavl/swot-clj"})
