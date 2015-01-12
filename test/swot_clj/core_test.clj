@@ -78,3 +78,8 @@
   (testing "return nil when institution invalid"
     (do
       (is (= (get-institution-name "foo@shop.com") nil)))))
+
+(deftest test-other
+  (testing "return nil for name for institutions validated by heuristics"
+    (do
+      (is (= (get-institution-name "heuristics-u.ac.jp") nil)))))

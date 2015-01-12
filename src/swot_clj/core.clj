@@ -75,5 +75,7 @@
   (if (not (blank? text))
     (let [domain (get-domain text)]
       (if (is-academic? domain)
-        (read-file (get-domain-file (str (psl/lookup tld-list domain))))
+        (try
+          (read-file (get-domain-file (str (psl/lookup tld-list domain))))
+          (catch Exception e))
         nil))))
