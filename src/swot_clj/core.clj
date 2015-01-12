@@ -1,6 +1,6 @@
 (ns swot-clj.core
   (require [clojure.java.io :refer [reader resource]]
-           [clojure.string :refer [split-lines lower-case trim]]
+           [clojure.string :refer [blank? lower-case split split-lines trim]]
            [inet.data.format.psl :as psl]))
 
 (defn- read-file
@@ -36,13 +36,18 @@
 (defn- get-domain
   "Strips a string, such as a URL or e-mail address, down to its domain."
   [text]
-  (trim (lower-case (re-find #"[^@\/:]+[:\d]*$" text))))
+  (apply
+    str
+    (first
+      (split
+        (trim (lower-case (re-find #"[^@\/:]+[:\d]*$" text)))
+        #":"))))
 
 (defn- get-domain-hierarchy
   "Returns the domain hierarchy delimited by slashes (akin to a file path) for
   a given domain."
   [domain]
-  (apply str (interpose "/" (reverse (.split domain "\\.")))))
+  (apply str (interpose "/" (reverse (split domain #"\.")))))
 
 (defn- get-domain-file
   "Returns the resource path representing a given domain, or nil if not found."
@@ -53,7 +58,7 @@
   "Determines if the passed string is an email or domain belonging to an
   academic institution."
   [text]
-  (if (not (nil? text))
+  (if (not (blank? text))
     (let [domain (get-domain text)]
       (if (nil? (in? blacklist (str (psl/lookup tld-list domain))))
         (if (nil? (psl/lookup whitelist domain))
@@ -67,8 +72,8 @@
   domain, or nil if the domain was not recognized (i.e. is-academic? returns
   false)."
   [text]
-  (if (not (nil? text))
+  (if (not (blank? text))
     (let [domain (get-domain text)]
       (if (is-academic? domain)
-        (read-file (get-domain-file domain))
+        (read-file (get-domain-file (str (psl/lookup tld-list domain))))
         nil))))

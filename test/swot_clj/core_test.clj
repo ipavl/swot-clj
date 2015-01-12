@@ -2,55 +2,79 @@
   (:require [clojure.test :refer :all]
             [swot-clj.core :refer :all]))
 
-(deftest test-domains
-  (testing "blacklisted emails and domains"
+(deftest test-academic
+  (testing "recognize academic email addresses and domains"
     (do
-      (is (= (is-academic? "mail@australia.edu") false))
-      (is (= (is-academic? "ExAmPLE@CaLifOrNiACOLLegES.eDu") false))
-      (is (= (is-academic? "australia.edu") false))
-      (is (= (is-academic? "foo.CET.edu") false))))
+      (is (= true (is-academic? "lreilly@stanford.edu")))
+      (is (= true (is-academic? "LREILLY@STANFORD.EDU")))
+      (is (= true (is-academic? "Lreilly@Stanford.Edu")))
+      (is (= true (is-academic? "lreilly@slac.stanford.edu")))
+      (is (= true (is-academic? "lreilly@strath.ac.uk")))
+      (is (= true (is-academic? "lreilly@soft-eng.strath.ac.uk")))
+      (is (= true (is-academic? "lee@ugr.es") true))
+      (is (= true (is-academic? "lee@uottawa.ca")))
+      (is (= true (is-academic? "lee@mother.edu.ru")))
+      (is (= true (is-academic? "lee@ucy.ac.cy")))
 
-  (testing "valid emails and domains"
-    (do
-      (is (= (is-academic? "mail@stanford.edu") true))
-      (is (= (is-academic? "TeST@cs.ox.AC.Uk") true))
-      (is (= (is-academic? "stanford.edu") true))
-      (is (= (is-academic? "www.stanford.edu") true))
-      (is (= (is-academic? "http://snu.ac.kr") true))
-      (is (= (is-academic? "sabi.eu.com") true))
-      (is (= (is-academic? "   mit.edu   ") true))
-      (is (= (is-academic? "univ-douala.com") true))
-      (is (= (is-academic? "heuristics-u.ac.jp") true))
-      (is (= (is-academic? "test@mail.uoguelph.ca") true))
-      (is (= (is-academic? "usenghor-francophonie.org") true))
-      (is (= (is-academic? "marcusoldham.vic.edu.au") true))))
+      (is (= false (is-academic? "lee@leerilly.net")))
+      (is (= false (is-academic? "lee@gmail.com")))
+      (is (= false (is-academic? "lee@stanford.edu.com")))
+      (is (= false (is-academic? "lee@strath.ac.uk.com")))
 
-  (testing "invalid emails, domains, and values"
-    (do
-      (is (= (is-academic? "harvard.edu.com") false))
-      (is (= (is-academic? "no-reply@gmail.com") false))
-      (is (= (is-academic? ".com") false))
-      (is (= (is-academic? ".invalid") false))
-      (is (= (is-academic? nil) false)))))
+      (is (= true (is-academic? "lee@ucy.ac.cy")))
+      (is (= true (is-academic? "stanford.edu")))
+      (is (= true (is-academic? "slac.stanford.edu")))
+      (is (= true (is-academic? "www.stanford.edu")))
+      (is (= true (is-academic? "http://www.stanford.edu")))
+      (is (= true (is-academic? "http://www.stanford.edu:9393")))
+      (is (= true (is-academic? "strath.ac.uk")))
+      (is (= true (is-academic? "soft-eng.strath.ac.uk")))
+      (is (= true (is-academic? "ugr.es")))
+      (is (= true (is-academic? "uottawa.ca")))
+      (is (= true (is-academic? "mother.edu.ru")))
+      (is (= true (is-academic? "ucy.ac.cy")))
 
-(deftest test-institution-names
-  (testing "blacklisted domains"
-    (do
-      (is (= (get-institution-name "si.edu") nil))
-      (is (= (get-institution-name "aMERICA.edU") nil))))
+      (is (= false (is-academic? "leerilly.net")))
+      (is (= false (is-academic? "gmail.com")))
+      (is (= false (is-academic? "stanford.edu.com")))
+      (is (= false (is-academic? "strath.ac.uk.com")))
 
-  (testing "invalid emails, domains, and values"
-    (do
-      (is (= (get-institution-name "no-reply@google.com") nil))
-      (is (= (get-institution-name nil) nil))))
+      (is (= false (is-academic? nil)))
+      (is (= false (is-academic? "")))
+      (is (= false (is-academic? "the")))
 
-  (testing "valid domains"
+      (is (= true (is-academic? " stanford.edu")))
+      (is (= true (is-academic? "lee@strath.ac.uk ")))
+      (is (= false (is-academic? " gmail.com ")))
+
+      (is (= true (is-academic? "lee@stud.uni-corvinus.hu")))))
+
+  (testing "fail blacklisted domains"
     (do
-      (is (= (get-institution-name "test@uwaterloo.ca")
-             ["University of St. Jerome's College" "University of Waterloo"]))
-      (is (= (get-institution-name "kyoto-u.ac.jp")
-             ["Kyoto University"]))
-      (is (= (get-institution-name "jyu.fi")
-             ["University of Jyväskylä"]))
-      (is (= (get-institution-name "fadi.at")
-             ["BRG Fadingerstraße Linz, Austria"])))))
+      (is (= false (is-academic? "si.edu")))
+      (is (= false (is-academic? " si.edu ")))
+      (is (= false (is-academic? "imposter@si.edu")))
+      (is (= false (is-academic? "foo.si.edu")))
+      (is (= false (is-academic? "america.edu")))))
+
+  (testing "don't error on TLD-only domains"
+    (do
+      (is (= false (is-academic? ".com")))))
+
+  (testing "don't error on invalid domains"
+    (do
+      (is (= false (is-academic? "foo@bar.invalid")))))
+
+      ;; overkill
+      (is (= true (is-academic? "lee@harvard.edu")))
+      (is (= true (is-academic? "lee@mail.harvard.edu"))))
+
+(deftest test-institution-name
+  (testing "return name of valid institutions"
+    (do
+      (is (= (get-institution-name "lreilly@cs.strath.ac.uk") ["University of Strathclyde"]))
+      (is (= (get-institution-name "lreilly@fadi.at") ["BRG Fadingerstraße Linz, Austria"]))))
+
+  (testing "return nil when institution invalid"
+    (do
+      (is (= (get-institution-name "foo@shop.com") nil)))))
