@@ -70,7 +70,7 @@
 (defn get-institution-name
   "Returns a vector of an institution's name(s) based on the passed email or
   domain, or nil if the domain was not recognized (i.e. is-academic? returns
-  false)."
+  false or the institution was validated by heuristics)."
   [text]
   (if (not (blank? text))
     (let [domain (get-domain text)]
