@@ -1,6 +1,7 @@
 # swot-clj
 
 [![Build Status](https://travis-ci.org/ipavl/swot-clj.svg?branch=master)](https://travis-ci.org/ipavl/swot-clj)
+[![Dependency Status](https://www.versioneye.com/user/projects/559365bf6238390015000002/badge.svg?style=flat)](https://www.versioneye.com/user/projects/559365bf6238390015000002)
 
 swot-clj is a Clojure port of [Lee Reilly](https://github.com/leereilly)'s [Swot library](https://github.com/leereilly/swot) to validate email addresses and domains of academic institutions, which is described as follows:
 
