@@ -1,4 +1,4 @@
-(defproject swot-clj "1.1.1"
+(defproject swot-clj "1.1.2"
   :description "Clojure port of the 'swot' Ruby gem to validate academic email addresses and domains using crowd-sourced data."
   :url "https://github.com/ipavl/swot-clj"
   :license {:name "Eclipse Public License"
