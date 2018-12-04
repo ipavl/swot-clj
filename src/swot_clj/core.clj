@@ -1,5 +1,5 @@
 (ns swot-clj.core
-  (require [clojure.java.io :refer [reader resource]]
+  (:require [clojure.java.io :refer [reader resource]]
            [clojure.string :refer [blank? lower-case split split-lines trim]]
            [inet.data.format.psl :as psl]))
 
